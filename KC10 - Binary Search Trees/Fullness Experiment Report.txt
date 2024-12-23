@@ -1,0 +1,100 @@
+				   Fullness Experiment Report
+
+
+      ------------------------Height method(Recursive & Iterative)------------------------
+	
+private int recHeight(BSTNode<T> node) {
+    if (node == null){
+      return -1;
+    } else {
+      int leftHeight = recHeight(node.getLeft());
+      int rightHeight = recHeight(node.getRight());
+      return 1 + Math.max(leftHeight, rightHeight);
+    }
+  }
+
+  public int height() {
+    return recHeight(root);
+  }
+		
+
+
+public int heightIterative() {
+    if (root == null) {
+      return -1;
+    }
+
+    Queue<BSTNode<T>> queue = new LinkedList<>();
+    queue.add(root);
+    int height = -1;
+
+    while(!queue.isEmpty()) {
+      int levelSize = queue.size();
+      for (int i = 0; i < levelSize; i++) {
+        BSTNode<T> currentNode = queue.poll();
+        if (currentNode.getLeft() != null) {
+          queue.add(currentNode.getLeft());
+        }
+        if (currentNode.getRight() != null) {
+          queue.add(currentNode.getRight());
+        }
+      }
+      height++;
+    }
+    return height;
+  }
+
+
+
+		   ------------------------fRatio method------------------------
+
+public double fRatio() {
+    if (isEmpty()) {
+      return 0;
+    }
+
+    int totalNodes = size();
+    int minHeight = (int) Math.floor(Math.log(totalNodes) / Math.log(2));
+    int actualHeight = height();
+
+    return (double) minHeight / actualHeight;
+  }
+
+		------------------------Application code------------------------
+
+	static void BSTExperiment() {
+        Random random = new Random();
+        int totalTrees = 10;
+        int numNodes = 1000;
+        int range = 3000;
+
+        for (int i = 1; i <= totalTrees; i++) {
+            BinarySearchTree<Integer> bst = new BinarySearchTree<>();
+
+            for (int j = 0; j < numNodes; j++) {
+                int randomValue = random.nextInt(range) + 1;
+                bst.add(randomValue);
+            }
+
+            int height = bst.height();
+            int minHeight = (int) Math.floor(Math.log(numNodes) / Math.log(2));
+            double fRatio = bst.fRatio();
+
+            System.out.printf("Tree %d:\n", i);
+            System.out.printf("Height: %d\n", height);
+            System.out.printf("Minimum height: %d\n", minHeight);
+            System.out.printf("Fullness Ratio: %.2f\n", fRatio);
+            System.out.println("-----------------------");
+        }
+    }
+
+	   ------------------------Sample out (Application Code)------------------------
+
+					  Tree 3:
+					  Height: 19
+					  Minimum height: 9
+					  Fullness Ratio: 0.47
+
+		--------------------------------------------------------------------
+
+The fullness ratio is a crucial metric to measure the efficiency of a binary tree. It shows how close the three is to being perfectly balanced. A balanced tree guarantees efficient search times, O(log N), while an unbalanced tree drops to O(N). By monitoring the fullness ratio, applications are able to detect when rebalancing is needed to maintain performance.
